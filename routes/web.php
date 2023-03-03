@@ -15,14 +15,27 @@ use App\Models\Listing;
 */
 
 Route::get('/', function () {
-    return view('listings',[
+    return view('listings', [
         'heading' => 'All Listings',
         'listings' => Listing::all()
     ]);
 });
-Route::get('/listings/{id}', function ($id) {
-    return view('listing',[
-    
-        'listing' => Listing::find($id)
+Route::get('/listings/{listing}', function (Listing $listing) {
+    // $listing = Listing::find($id);
+    // if ($listing) {
+    //     return view('listing', [
+
+    //         # code...
+    //         'listing' => $listing
+
+    //     ]);
+    // }
+    // else{
+    //     abort('404')
+    // }
+
+    return view('listing', [
+        'listing' => $listing
     ]);
+
 });
