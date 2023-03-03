@@ -15,8 +15,8 @@ class ListingFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence,
-            'tags' => $this->faker->words(3, true),
-            'company' => $this->faker->company, 
+            'tags' => implode(', ', $this->faker->words(3)),
+            'company' => $this->faker->company,
             'location' => $this->faker->city(),
             'email' => $this->faker->email,
             'website' => $this->faker->domainName,
