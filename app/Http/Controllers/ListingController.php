@@ -23,7 +23,7 @@ class ListingController extends Controller
             'listing' => $listing
         ]);
     }
-    
+
     //create form
     public function create()
     {
@@ -33,10 +33,11 @@ class ListingController extends Controller
     // /store listing data 
     public function store(Request $request)
     {
-    //    dd($request->file('logo')->store());
+        //    dd($request->file('logo')->store());
         $formField = $request->validate([
             'title' => 'required',
-            'company' => ['required', Rule::unique('listings','company'),],
+            'company' => ['required', Rule::unique('listings', 'company'),
+            ],
             'description' => 'required',
             'tags' => 'required',
             'location' => 'required',
@@ -45,13 +46,46 @@ class ListingController extends Controller
             // 'email' => ['required','email'],
         ]);
 
-        if($request->hasFile('logo')){
+        if ($request->hasFile('logo')) {
             $formField['logo'] = $request->file('logo')->store('logos', 'public');
-        } 
+        }
 
         // dd($formField);
         Listing::create($formField);
 
         return redirect('/')->with('success', 'Listing created successfully!');
+    }
+
+    //show edit form
+    public function edit(Listing $listing)
+    {
+        // dd($listing);
+        return view('listings.edit', [
+            'listing' => $listing
+        ]);
+    }
+
+    //update listing
+    public function update(Request $request, Listing $listing)
+    {
+        $formField = $request->validate([
+            'title' => 'required',
+            'company' => ['required', Rule::unique('listings', 'company')->ignore($listing->id),
+            ],
+            'description' => 'required',
+            'tags' => 'required',
+            'location' => 'required',
+            'website' => 'required',
+            'email' => 'required|email',
+            // 'email' => ['required','email'],
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $formField['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        $listing->update($formField);
+
+        return back()->with('success', 'Listing updated successfully!');
     }
 }
