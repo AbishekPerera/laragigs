@@ -42,4 +42,29 @@ class UserController extends Controller
 
         return redirect('/')->with('message', 'User logged out successfully!');
     }
+
+    // show login form
+    public function login()
+    {
+        return view('users.login');
+    }
+
+    // login user
+    public function authenticate(Request $request)
+    {
+        $formField = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (auth()->attempt($formField)) {
+            $request->session()->regenerate();
+
+            return redirect('/')->with('message', 'User logged in successfully!');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
 }
